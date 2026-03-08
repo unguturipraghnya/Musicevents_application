@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSIC EVENTS</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#533483">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://jxrirlmirrehbhdbbkct.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4cmlybG1pcnJlaGJoZGJia2N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4ODI1MjgsImV4cCI6MjA4ODQ1ODUyOH0.AcC-g22R3AiNq9NvinFkC5hOf55vYA-T7LIfOTXgU7c';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+        window.supabase = supabaseClient;
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(-45deg, #0f0c29, #1a1a2e, #16213e, #0f3460, #533483);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        body.light-theme {
+            background: linear-gradient(-45deg, #e0e5ec, #f5f7fa, #e4e8ec, #dbe2e8, #c9d1e0);
+            background-size: 400% 400%;
+        }
+
+        body.light-theme .container {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme h1 {
+            background: linear-gradient(135deg, #1a1a2e 0%, #533483 100%);
+            -webkit-background-clip: text;
+        }
+
+        body.light-theme h1::after {
+            -webkit-text-fill-color: #533483;
+        }
+
+        body.light-theme .welcome-text p:first-child {
+            background: linear-gradient(135deg, #1a1a2e, #533483);
+            -webkit-background-clip: text;
+        }
+
+        body.light-theme .song-item {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .song-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.light-theme .song-title {
+            background: linear-gradient(135deg, #1a1a2e, #533483);
+            -webkit-background-clip: text;
+        }
+
+        body.light-theme .song-artist {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .user-email {
+            color: #533483;
+        }
+
+        body.light-theme .form-group input,
+        body.light-theme .form-group select {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.2);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .form-group input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .dropdown-menu {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .dropdown-item {
+            color: #1a1a2e;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .dropdown-item:hover {
+            background: rgba(83, 52, 131, 0.1);
+        }
+
+        body.light-theme .host-section {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .host-section h3,
+        body.light-theme .host-section h4 {
+            color: #533483;
+        }
+
+        body.light-theme .request-item {
+            background: rgba(245, 87, 108, 0.1);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1100px;
+            min-height: 600px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fff 0%, #a8c0ff 50%, #3f2b96 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '♪';
+            display: block;
+            font-size: 0.3em;
+            -webkit-text-fill-color: #a8c0ff;
+            margin-top: 5px;
+        }
+
+        .login-section {
+            text-align: center;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: #a8c0ff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .login-section h2 {
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #g_id_onload {
+            display: flex;
+            justify-content: center;
+        }
+
+        .g_id_signin {
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-email {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #a8c0ff;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 200%;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            background-position: 100% 100%;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 14px;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        body.light-theme .theme-toggle {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #f093fb, #f5576c, #fa709a);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-song-form {
+            display: none;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .add-song-form h3 {
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #a8c0ff;
+            box-shadow: 0 0 20px rgba(168, 192, 255, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .form-group input[type="file"] {
+            padding: 14px;
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            margin-right: 15px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .form-group input[type="file"]::file-selector-button:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #a8c0ff);
+            background-size: 200% 200%;
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            background-position: 100% 100%;
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .songs-list {
+            display: none;
+        }
+
+        .song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-item:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .song-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea, #764ba2, #f093fb);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .song-info {
+            flex: 1;
+            padding-left: 10px;
+        }
+
+        .song-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .song-artist {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95em;
+            margin-bottom: 4px;
+        }
+
+        .song-actions {
+            position: relative;
+        }
+
+        .menu-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 8px 14px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(168, 192, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 8px;
+            background: linear-gradient(135deg, rgba(20,20,30,0.98), rgba(40,40,60,0.98));
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            min-width: 160px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            z-index: 1000;
+            border: 1px solid rgba(255,255,255,0.15);
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            animation: dropIn 0.2s ease;
+        }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 1em;
+            color: #fff;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(90deg, rgba(102,126,234,0.3), rgba(168,192,255,0.2));
+        }
+
+        .delete-request {
+            border-left: 4px solid #f5576c;
+        }
+
+        .delete-request::before {
+            background: linear-gradient(180deg, #f5576c, #f093fb);
+        }
+
+        .host-section {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .host-section h3 {
+            margin-bottom: 20px;
+            color: #f093fb;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .request-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, rgba(245,87,108,0.15), rgba(245,87,108,0.05));
+            border-radius: 14px;
+            border-left: 4px solid #f5576c;
+        }
+
+        .approve-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        .approve-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(102,126,234,0.6);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, rgba(245,87,108,0.3), rgba(245,87,108,0.1));
+            color: #f5576c;
+            border: 1px solid rgba(245,87,108,0.3);
+        }
+
+        .performance-number {
+            font-size: 1.6em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 18px;
+            min-width: 40px;
+        }
+
+        .set-number-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .set-number-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .edit-modal.show {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            padding: 40px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .edit-modal h3 {
+            margin-bottom: 25px;
+            color: #a8c0ff;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .edit-modal .form-group {
+            margin-bottom: 20px;
+        }
+
+        .edit-modal label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+        }
+
+        .edit-modal input, .edit-modal textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-size: 1em;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .edit-modal input:focus, .edit-modal textarea:focus {
+            outline: none;
+            border-color: #a8c0ff;
+            box-shadow: 0 0 20px rgba(168,192,255,0.2);
+        }
+
+        .edit-modal textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .edit-modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .edit-modal-buttons button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-cancel {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-save:hover, .btn-cancel:hover {
+            transform: translateY(-2px);
+        }
+
+        audio {
+            margin-top: 12px;
+            width: 100%;
+            max-width: 320px;
+            border-radius: 30px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            min-height: 300px;
+        }
+
+        .welcome-text p:first-child {
+            font-size: 2em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1em;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 30px;
+        }
+
+        .auth-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(245,87,108,0.3);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .instructions-box {
+            background: linear-gradient(135deg, rgba(245,87,108,0.15), rgba(245,87,108,0.05));
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+            border-left: 4px solid #f5576c;
+        }
+
+        .instructions-box strong {
+            color: #f5576c;
+        }
+
+        .instructions-box ul {
+            margin: 12px 0 0 20px;
+            line-height: 1.9;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .instructions-box li {
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                width: 95%;
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                min-height: 100vh;
+                border-radius: 0;
+                padding: 30px 20px;
+                margin: 0;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+
+            .welcome-text p:first-child {
+                font-size: 1.5em;
+            }
+
+            .welcome-subtitle {
+                font-size: 0.95em;
+                text-align: center;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .auth-btn {
+                width: 100%;
+            }
+
+            .action-buttons {
+                gap: 12px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9em;
+            }
+
+            .user-info {
+                padding: 15px;
+            }
+
+            .user-email {
+                font-size: 0.9em;
+                word-break: break-all;
+            }
+
+            .add-song-form, .host-section {
+                padding: 20px;
+            }
+
+            .add-song-form h3, .host-section h3 {
+                font-size: 1.2em;
+            }
+
+            .form-group input, .form-group select {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+
+            .song-item {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .performance-number {
+                font-size: 1.2em;
+                margin-bottom: 8px;
+            }
+
+            .song-info {
+                padding-left: 0;
+            }
+
+            .song-title {
+                font-size: 1.1em;
+            }
+
+            .song-artist {
+                font-size: 0.85em;
+            }
+
+            .song-actions {
+                margin-top: 12px;
+                align-self: flex-end;
+            }
+
+            .dropdown-menu {
+                right: 0;
+                min-width: 140px;
+            }
+
+            .dropdown-item {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+
+            .request-item {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .edit-modal-content {
+                padding: 25px;
+                width: 95%;
+            }
+
+            .edit-modal-buttons {
+                flex-direction: column;
+            }
+
+            audio {
+                max-width: 100%;
+            }
+
+            .instructions-box {
+                padding: 12px;
+            }
+
+            .instructions-box ul {
+                margin: 8px 0 0 15px;
+            }
+
+            .instructions-box li {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MUSIC EVENTS</h1>
+
+        <div class="welcome-section" id="welcomeSection">
+            <div class="welcome-text">
+                <p>Welcome to Music Events</p>
+                <p class="welcome-subtitle">Upload and manage your music performances</p>
+            </div>
+            <div class="auth-buttons">
+                <button class="auth-btn btn-register" onclick="showRegister()">Register</button>
+                <button class="auth-btn btn-login" onclick="showLogin()">Login</button>
+            </div>
+        </div>
+        
+        <div class="login-section" id="registerSection" style="display: none;">
+            <h2>Register</h2>
+            <div style="max-width: 400px; width: 100%;">
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Enter your @bvrithyderabad.edu.in email" style="width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 1em;">
+                </div>
+                <button class="btn-submit" onclick="registerUser()">Register</button>
+            </div>
+        </div>
+
+        <div class="login-section" id="loginSection" style="display: none;">
+            <h2>Sign in to continue</h2>
+            <div id="googleSignInLoading" style="margin: 20px 0;">
+                <div class="loading"></div>
+                <p style="margin-top: 10px; color: rgba(255,255,255,0.7);">Loading Google Sign-In...</p>
+            </div>
+            <div id="g_id_onload"
+                 data-client_id="76671000152-n205j2lnfopcqgptq15h0dksdt0li4j9.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 style="display: none;">
+            </div>
+            <div class="g_id_signin" data-type="standard" style="display: none;"></div>
+        </div>
+
+        <div class="main-content" id="mainContent">
+            <div class="user-info">
+                <span class="user-email" id="userEmail"></span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Toggle Theme">🌙</button>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-view" onclick="toggleSongs()">View Songs</button>
+                <button class="btn btn-add" onclick="toggleAddForm()">Add Songs</button>
+                <button class="btn btn-view" onclick="toggleSchedule()">📅 Schedule</button>
+                <button class="btn btn-view" id="exportBtn" onclick="exportToCSV()" style="display: none;">📥 Export</button>
+                <button class="btn btn-view" id="analyticsBtn" onclick="toggleAnalytics()" style="display: none;">📊 Analytics</button>
+                <button class="btn btn-view" id="addHostBtn" onclick="toggleAddHost()" style="display: none;">Add Host</button>
+            </div>
+
+            <div class="host-section" id="searchHostSection" style="display: none;">
+                <h3 style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    Search & Manage Songs
+                    <button class="btn btn-view" onclick="toggleBulkMode()" style="padding: 8px 15px; font-size: 0.85em;">☑️ Bulk Select</button>
+                </h3>
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <input type="text" id="searchInput" placeholder="Search by name or roll number..." 
+                           style="flex: 1; min-width: 200px; padding: 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;">
+                    <select id="sortSelect" style="padding: 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;">
+                        <option value="">Sort by</option>
+                        <option value="name_asc">Name (A-Z)</option>
+                        <option value="name_desc">Name (Z-A)</option>
+                        <option value="performance_asc">Performance # (Low to High)</option>
+                        <option value="performance_desc">Performance # (High to Low)</option>
+                        <option value="recent">Most Recent</option>
+                    </select>
+                    <button class="btn btn-view" onclick="searchAndSortSongs()" style="padding: 10px 20px;">Search</button>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+
+            <div class="add-song-form" id="addSongForm">
+                <h3>Add New Song</h3>
+                <div class="instructions-box">
+                    <strong>Important Instructions:</strong>
+                    <ul>
+                        <li>Audio file must be in MP3 format</li>
+                        <li>File size must be ≤ 5 MB</li>
+                        <li>Files larger than 5 MB will be rejected</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <select id="performanceType" style="width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 1em;" onchange="handlePerformanceTypeChange()">
+                        <option value="">Select Performance Type</option>
+                        <option value="solo">Solo</option>
+                        <option value="group">Group</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="numParticipants" placeholder="Number of Participants" min="1" required onchange="generateNameFields()">
+                </div>
+                <div id="participantNamesContainer"></div>
+                <div class="form-group">
+                    <input type="text" id="songsListInput" placeholder="Songs List" required>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="songFile" accept=".mp3,audio/mpeg" required>
+                </div>
+                <button class="btn-submit" onclick="addSong()">Add Song</button>
+            </div>
+
+            <div class="songs-list" id="songsList"></div>
+
+            <div class="host-section" id="addHostSection" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Add New Host</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <input type="email" id="newHostEmail" placeholder="Enter @bvrithyderabad.edu.in email" 
+                           style="flex: 1; min-width: 200px; padding: 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;">
+                    <button class="btn btn-add" onclick="addNewHost()">Add Host</button>
+                </div>
+                <h4 style="margin-bottom: 15px; color: #a8c0ff;">Current Hosts:</h4>
+                <div id="hostListContainer"></div>
+            </div>
+
+            <div class="host-section" id="hostSection">
+                <h3 style="margin-bottom: 20px;">Delete Requests</h3>
+                <div id="deleteRequests"></div>
+            </div>
+
+            <div class="host-section" id="scheduleSection" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Performance Schedule</h3>
+                <div id="scheduleList"></div>
+            </div>
+
+            <div class="host-section" id="analyticsSection" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Analytics Dashboard</h3>
+                <div id="analyticsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-content">
+            <h3>Edit Song Details</h3>
+            <div class="form-group">
+                <label>Roll Numbers (comma-separated)</label>
+                <textarea id="editRollNumbers"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Songs List</label>
+                <input type="text" id="editSongsList">
+            </div>
+            <div class="edit-modal-buttons">
+                <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-save" onclick="saveEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let songs = [];
+        let allSongsForHost = [];
+        let deleteRequests = [];
+        let editingSongIndex = null;
+        let lastCommentIds = {};
+        const DEFAULT_HOST_EMAILS = ['25wh1a6683@bvrithyderabad.edu.in', '25wh1a6678@bvrithyderabad.edu.in', '25wh1a66b0@bvrithyderabad.edu.in'];
+        let HOST_EMAILS = DEFAULT_HOST_EMAILS.concat(JSON.parse(localStorage.getItem('customHostEmails') || '[]'));
+        
+        function isHost(email) {
+            return HOST_EMAILS.includes(email);
+        }
+
+        function addHostEmail(email) {
+            if (!HOST_EMAILS.includes(email)) {
+                HOST_EMAILS.push(email);
+                const customHosts = JSON.parse(localStorage.getItem('customHostEmails') || '[]');
+                if (!customHosts.includes(email)) {
+                    customHosts.push(email);
+                    localStorage.setItem('customHostEmails', JSON.stringify(customHosts));
+                }
+                return true;
+            }
+            return false;
+        }
+
+        function addNewHost() {
+            const emailInput = document.getElementById('newHostEmail');
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            if (!email.endsWith('@bvrithyderabad.edu.in')) {
+                alert('Please enter a valid @bvrithyderabad.edu.in email');
+                return;
+            }
+            
+            if (addHostEmail(email)) {
+                alert(email + ' has been added as a host!');
+                emailInput.value = '';
+            } else {
+                alert('This email is already a host');
+            }
+        }
+
+        async function toggleComments(songId) {
+            const commentsDiv = document.getElementById('comments-' + songId);
+            commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
+            if (commentsDiv.style.display === 'block') {
+                await loadComments(songId);
+            }
+        }
+
+        async function loadComments(songId) {
+            const { data, error } = await window.supabase
+                .from('comments')
+                .select('*')
+                .eq('song_id', songId)
+                .order('created_at', { ascending: true });
+            
+            if (error) {
+                console.error('Error loading comments:', error);
+                return;
+            }
+            
+            const commentsListDiv = document.getElementById('comments-list-' + songId);
+            commentsListDiv.innerHTML = '';
+            
+            if (data && data.length > 0) {
+                data.forEach(comment => {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.style.cssText = 'padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 8px;';
+                    const isHostComment = isHost(comment.user_email);
+                    commentDiv.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: ${isHostComment ? '#f093fb' : '#a8c0ff'}; font-weight: 600; font-size: 0.85em;">${comment.user_email.split('@')[0]} ${isHostComment ? '(Host)' : ''}</span>
+                            <span style="color: rgba(255,255,255,0.4); font-size: 0.7em;">${new Date(comment.created_at).toLocaleString()}</span>
+                        </div>
+                        <div style="color: #fff; font-size: 0.9em; margin-top: 4px;">${comment.message}</div>
+                    `;
+                    commentsListDiv.appendChild(commentDiv);
+                });
+            } else {
+                commentsListDiv.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.9em;">No comments yet</p>';
+            }
+        }
+
+        async function addComment(songId) {
+            const input = document.getElementById('comment-input-' + songId);
+            const message = input.value.trim();
+            
+            if (!message) {
+                alert('Please enter a comment');
+                return;
+            }
+            
+            const isHostComment = isHost(currentUser);
+            const senderName = isHostComment ? 'Host' : currentUser.split('@')[0];
+            
+            try {
+                const { error } = await window.supabase
+                    .from('comments')
+                    .insert({
+                        song_id: songId,
+                        user_email: currentUser,
+                        message: message
+                    });
+                
+                if (error) throw error;
+                
+                // Show web notification if host is commenting
+                if (isHostComment) {
+                    if (Notification.permission === 'granted') {
+                        new Notification('New Comment', {
+                            body: `Host commented: "${message}"`,
+                            icon: '🎵'
+                        });
+                    } else if (Notification.permission !== 'denied') {
+                        const permission = await Notification.requestPermission();
+                        if (permission === 'granted') {
+                            new Notification('New Comment', {
+                                body: `Host commented: "${message}"`,
+                                icon: '🎵'
+                            });
+                        }
+                    }
+                }
+                
+                input.value = '';
+                await loadComments(songId);
+            } catch (error) {
+                console.error('Error adding comment:', error);
+                alert('Error adding comment: ' + error.message);
+            }
+        }
+
+        function showRegister() {
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'flex';
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('welcomeSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+        }
+
+        async function registerUser() {
+            const email = document.getElementById('registerEmail').value.trim();
+            
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+
+            if (!email.endsWith('@bvrithyderabad.edu.in')) {
+                alert('Please use your @bvrithyderabad.edu.in email');
+                return;
+            }
+
+            try {
+                const { data: existing } = await window.supabase
+                    .from('whitelist')
+                    .select('email')
+                    .eq('email', email)
+                    .single();
+
+                if (existing) {
+                    alert('Email already registered! Taking you to login...');
+                    document.getElementById('registerEmail').value = '';
+                    showLogin();
+                    triggerGoogleSignIn();
+                    return;
+                }
+
+                const { error } = await window.supabase
+                    .from('whitelist')
+                    .insert({ email: email });
+
+                if (error) throw error;
+
+                alert('Registration successful! Please login with Google.');
+                document.getElementById('registerEmail').value = '';
+                showLogin();
+                triggerGoogleSignIn();
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Error during registration: ' + error.message);
+            }
+        }
+
+        function triggerGoogleSignIn() {
+            setTimeout(function() {
+                const signInButton = document.querySelector('.g_id_signin');
+                if (signInButton && signInButton.shadowRoot) {
+                    const button = signInButton.shadowRoot.querySelector('button');
+                    if (button) button.click();
+                }
+            }, 1000);
+        }
+
+        async function checkWhitelist(email) {
+            const { data, error } = await window.supabase
+                .from('whitelist')
+                .select('email')
+                .eq('email', email)
+                .single();
+
+            return data !== null;
+        }
+
+        async function loadSongsFromSupabase() {
+            let query = window.supabase
+                .from('songs')
+                .select('*');
+            
+            // Non-host users see their own songs + songs where they are a participant
+            if (!isHost(currentUser)) {
+                const userRollNumber = currentUser.split('@')[0]; // Extract roll number from email
+                
+                const { data, error } = await window.supabase
+                    .from('songs')
+                    .select('*')
+                    .or(`uploaded_by.eq.${currentUser},participants_name.ilike.%${userRollNumber}%`)
+                    .order('performance_number', { ascending: true, nullsFirst: false })
+                    .order('timestamp', { ascending: true });
+                
+                if (error) {
+                    console.error('Error loading songs:', error);
+                    return [];
+                }
+                songs = data || [];
+                return songs;
+            }
+            
+            const { data, error } = await query
+                .order('performance_number', { ascending: true, nullsFirst: false })
+                .order('timestamp', { ascending: true });
+            
+            if (error) {
+                console.error('Error loading songs:', error);
+                return [];
+            }
+            songs = data || [];
+            return songs;
+        }
+
+        async function loadDeleteRequestsFromSupabase() {
+            const { data, error } = await window.supabase
+                .from('delete_requests')
+                .select('*')
+                .order('id', { ascending: false });
+            
+            if (error) {
+                console.error('Error loading delete requests:', error);
+                return [];
+            }
+            deleteRequests = data || [];
+            console.log('Loaded delete requests:', deleteRequests);
+            return deleteRequests;
+        }
+
+        async function loadAllSongsForHost() {
+            const { data, error } = await window.supabase
+                .from('songs')
+                .select('*')
+                .order('performance_number', { ascending: true, nullsFirst: false })
+                .order('timestamp', { ascending: true });
+            
+            if (error) {
+                console.error('Error loading all songs for host:', error);
+                return [];
+            }
+            allSongsForHost = data || [];
+            return allSongsForHost;
+        }
+
+        function searchAndSortSongs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sortValue = document.getElementById('sortSelect').value;
+            const resultsDiv = document.getElementById('searchResults');
+            
+            document.getElementById('songsList').style.display = 'none';
+            document.getElementById('addSongForm').style.display = 'none';
+            
+            let filteredSongs = [...allSongsForHost];
+            
+            if (searchTerm) {
+                filteredSongs = filteredSongs.filter(song => {
+                    const name = (song.participants_name || '').toLowerCase();
+                    const rollNumbers = (song.participants_name || '').toLowerCase();
+                    const songsList = (song.songs_list || '').toLowerCase();
+                    return name.includes(searchTerm) || rollNumbers.includes(searchTerm) || songsList.includes(searchTerm);
+                });
+            }
+            
+            if (sortValue === 'name_asc') {
+                filteredSongs.sort((a, b) => (a.participants_name || '').localeCompare(b.participants_name || ''));
+            } else if (sortValue === 'name_desc') {
+                filteredSongs.sort((a, b) => (b.participants_name || '').localeCompare(a.participants_name || ''));
+            } else if (sortValue === 'performance_asc') {
+                filteredSongs.sort((a, b) => (a.performance_number || 0) - (b.performance_number || 0));
+            } else if (sortValue === 'performance_desc') {
+                filteredSongs.sort((a, b) => (b.performance_number || 0) - (a.performance_number || 0));
+            } else if (sortValue === 'recent') {
+                filteredSongs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            }
+            
+            resultsDiv.innerHTML = '';
+            
+            filteredSongs.forEach((song, index) => {
+                const uploadedByRollNumber = song.uploaded_by ? song.uploaded_by.split('@')[0] : 'Unknown';
+                const songItem = document.createElement('div');
+                songItem.className = 'song-item' + (song.delete_requested ? ' delete-request' : '');
+                songItem.innerHTML = `
+                    ${song.performance_number ? `<div class="performance-number">#${song.performance_number}</div>` : ''}
+                    <div class="song-info">
+                        <div class="song-title">${song.participants_name || 'Untitled'}</div>
+                        ${song.performance_type ? `<div class="song-artist">Type: ${song.performance_type.charAt(0).toUpperCase() + song.performance_type.slice(1)}</div>` : ''}
+                        <div class="song-artist">Participants: ${song.num_participants || 'N/A'}</div>
+                        <div class="song-artist">Songs: ${song.songs_list || 'N/A'}</div>
+                        <div class="song-artist">Uploaded by: ${uploadedByRollNumber}</div>
+                        ${song.audio_url ? `<audio controls style="margin-top: 10px; width: 100%; max-width: 300px;"><source src="${song.audio_url}" type="audio/mpeg"></audio>` : ''}
+                        <button class="set-number-btn" onclick="toggleComments('${song.id}')" style="margin-top: 10px;">💬 Comments</button>
+                        <div id="comments-${song.id}" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                            <div id="comments-list-${song.id}" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="comment-input-${song.id}" placeholder="Write a comment..." style="flex: 1; padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 0.9em;">
+                                <button onclick="addComment('${song.id}')" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; padding: 10px 15px; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 600;">Send</button>
+                            </div>
+                        </div>
+                        ${song.delete_requested ? '<span class="status-badge status-pending">Delete Requested</span>' : ''}
+                    </div>
+                    <div class="song-actions">
+                        <button class="menu-btn" onclick="toggleSearchMenu(${index})">⋮</button>
+                        <div class="dropdown-menu" id="searchMenu-${index}">
+                            <div class="dropdown-item" onclick="editSongById('${song.id}')">Edit</div>
+                            <div class="dropdown-item" onclick="setPerformanceNumberById('${song.id}')">Set #</div>
+                            <div class="dropdown-item" onclick="deleteSongById('${song.id}')">Delete</div>
+                        </div>
+                    </div>
+                `;
+                resultsDiv.appendChild(songItem);
+            });
+            
+            if (filteredSongs.length === 0) {
+                resultsDiv.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">No songs found</p>';
+            }
+        }
+
+        function toggleSearchMenu(index) {
+            const menu = document.getElementById(`searchMenu-${index}`);
+            const allMenus = document.querySelectorAll('.dropdown-menu');
+            
+            allMenus.forEach(m => {
+                if (m !== menu) m.classList.remove('show');
+            });
+            
+            menu.classList.toggle('show');
+            event.stopPropagation();
+        }
+
+        function editSongById(songId) {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            const song = allSongsForHost.find(s => s.id === songId);
+            if (song) {
+                editingSongIndex = songs.findIndex(s => s.id === songId);
+                document.getElementById('editRollNumbers').value = song.participants_name || '';
+                document.getElementById('editSongsList').value = song.songs_list || '';
+                document.getElementById('editModal').classList.add('show');
+            }
+        }
+
+        function setPerformanceNumberById(songId) {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            const song = allSongsForHost.find(s => s.id === songId);
+            if (song) {
+                const newNumber = prompt('Enter performance number:', song.performance_number || '');
+                if (newNumber !== null) {
+                    window.supabase.from('songs').update({ performance_number: parseInt(newNumber) }).eq('id', songId).then(() => {
+                        loadAllSongsForHost().then(() => searchAndSortSongs());
+                        loadSongsFromSupabase();
+                    });
+                }
+            }
+        }
+
+        function deleteSongById(songId) {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            if (!confirm('Are you sure you want to delete this song?')) return;
+            
+            const song = allSongsForHost.find(s => s.id === songId);
+            
+            async function doDelete() {
+                if (song.storage_path) {
+                    await window.supabase.storage.from('songs').remove([song.storage_path]);
+                }
+                await window.supabase.from('songs').delete().eq('id', songId);
+                await window.supabase.from('delete_requests').delete().eq('song_id', songId);
+                
+                await loadAllSongsForHost();
+                await loadSongsFromSupabase();
+                await loadDeleteRequestsFromSupabase();
+                searchAndSortSongs();
+                loadSongs();
+                loadDeleteRequests();
+                alert('Song deleted!');
+            }
+            doDelete();
+        }
+
+        function handleCredentialResponse(response) {
+            const responsePayload = parseJwt(response.credential);
+            const email = responsePayload.email;
+
+            if (!email.endsWith('@bvrithyderabad.edu.in')) {
+                alert('Access denied. Please use your @bvrithyderabad.edu.in email.');
+                return;
+            }
+
+            checkWhitelist(email).then(isWhitelisted => {
+                if (!isWhitelisted) {
+                    alert('Access denied. Please register first.');
+                    showRegister();
+                    return;
+                }
+
+                currentUser = email;
+                localStorage.setItem('currentUser', email);
+                console.log('User logged in:', currentUser);
+                console.log('Is host?', isHost(currentUser));
+                
+                document.getElementById('welcomeSection').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('registerSection').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('userEmail').textContent = email;
+
+                if (isHost(email)) {
+                    console.log('Loading host section...');
+                    document.getElementById('hostSection').style.display = 'block';
+                    document.getElementById('searchHostSection').style.display = 'block';
+                    document.getElementById('addHostBtn').style.display = 'inline-block';
+                    document.getElementById('exportBtn').style.display = 'inline-block';
+                    document.getElementById('analyticsBtn').style.display = 'inline-block';
+                    loadHostList();
+                    loadDeleteRequestsFromSupabase().then(() => {
+                        console.log('Delete requests loaded for host');
+                        loadDeleteRequests();
+                    });
+                    loadAllSongsForHost().then(() => searchAndSortSongs());
+                }
+                loadSongsFromSupabase().then(() => loadSongs());
+                
+                // Load theme
+                loadTheme();
+                
+                // Start polling for new comments (only for non-host users)
+                if (!isHost(currentUser)) {
+                    startCommentPolling();
+                }
+            });
+        }
+
+        function startCommentPolling() {
+            if (!window.supabase) return;
+            
+            // Request notification permission
+            if (Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+            
+            // Poll every 10 seconds
+            setInterval(async () => {
+                if (!currentUser || isHost(currentUser)) return;
+                
+                try {
+                    const { data: userSongs } = await window.supabase
+                        .from('songs')
+                        .select('id')
+                        .eq('uploaded_by', currentUser);
+                    
+                    if (!userSongs || userSongs.length === 0) return;
+                    
+                    const songIds = userSongs.map(s => s.id);
+                    
+                    const { data: comments } = await window.supabase
+                        .from('comments')
+                        .select('*')
+                        .in('song_id', songIds)
+                        .order('created_at', { ascending: false })
+                        .limit(5);
+                    
+                    if (!comments) return;
+                    
+                    comments.forEach(comment => {
+                        const key = comment.song_id + '_' + comment.id;
+                        if (!lastCommentIds[key] && isHost(comment.user_email)) {
+                            lastCommentIds[key] = true;
+                            
+                            if (Notification.permission === 'granted') {
+                                new Notification('New Comment from Host', {
+                                    body: comment.message,
+                                    icon: '🎵'
+                                });
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.log('Comment polling error:', e);
+                }
+            }, 10000);
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeToggle').textContent = '☀️';
+            }
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            let dataToExport = isHost(currentUser) ? allSongsForHost : songs;
+            
+            if (dataToExport.length === 0) {
+                alert('No songs to export');
+                return;
+            }
+
+            const headers = ['Performance #', 'Type', 'Participants', 'Songs List', 'Uploaded By', 'File Name', 'File Size'];
+            const rows = dataToExport.map(song => [
+                song.performance_number || '',
+                song.performance_type || '',
+                song.participants_name || '',
+                song.songs_list || '',
+                song.uploaded_by ? song.uploaded_by.split('@')[0] : '',
+                song.file_name || '',
+                song.file_size || ''
+            ]);
+
+            let csvContent = '\uFEFF' + headers.join(',') + '\n';
+            rows.forEach(row => {
+                csvContent += row.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(',') + '\n';
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'music_events_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+        }
+
+        // Schedule Page
+        let scheduleVisible = false;
+        
+        function toggleSchedule() {
+            const section = document.getElementById('scheduleSection');
+            scheduleVisible = !scheduleVisible;
+            section.style.display = scheduleVisible ? 'block' : 'none';
+            
+            if (scheduleVisible) {
+                document.getElementById('songsList').style.display = 'none';
+                document.getElementById('addSongForm').style.display = 'none';
+                document.getElementById('searchHostSection').style.display = 'none';
+                document.getElementById('addHostSection').style.display = 'none';
+                loadSchedule();
+            }
+        }
+
+        async function loadSchedule() {
+            const { data, error } = await window.supabase
+                .from('songs')
+                .select('*')
+                .not('performance_number', 'is', null)
+                .order('performance_number', { ascending: true });
+
+            const container = document.getElementById('scheduleList');
+            container.innerHTML = '';
+
+            if (error || !data || data.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">No performances scheduled yet</p>';
+                return;
+            }
+
+            data.forEach(song => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display: flex; align-items: center; padding: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.1); border-radius: 12px; border-left: 4px solid #667eea;';
+                item.innerHTML = `
+                    <div style="font-size: 1.5em; font-weight: 700; color: #a8c0ff; min-width: 50px;">#${song.performance_number}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #fff;">${song.participants_name || 'Untitled'}</div>
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.6);">${song.performance_type} • ${song.num_participants} participant(s)</div>
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.5);">Songs: ${song.songs_list || 'N/A'}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Analytics Dashboard
+        let analyticsVisible = false;
+        
+        function toggleAnalytics() {
+            const section = document.getElementById('analyticsSection');
+            analyticsVisible = !analyticsVisible;
+            section.style.display = analyticsVisible ? 'block' : 'none';
+            
+            if (analyticsVisible) {
+                document.getElementById('songsList').style.display = 'none';
+                document.getElementById('addSongForm').style.display = 'none';
+                document.getElementById('searchHostSection').style.display = 'none';
+                document.getElementById('addHostSection').style.display = 'none';
+                document.getElementById('scheduleSection').style.display = 'none';
+                loadAnalytics();
+            }
+        }
+
+        async function loadAnalytics() {
+            const { data: songsData } = await window.supabase.from('songs').select('*');
+            const { data: usersData } = await window.supabase.from('whitelist').select('email');
+            const { data: commentsData } = await window.supabase.from('comments').select('*');
+
+            const totalSongs = songsData?.length || 0;
+            const totalUsers = usersData?.length || 0;
+            const totalComments = commentsData?.length || 0;
+            
+            const soloCount = songsData?.filter(s => s.performance_type === 'solo').length || 0;
+            const groupCount = songsData?.filter(s => s.performance_type === 'group').length || 0;
+            
+            const scheduledCount = songsData?.filter(s => s.performance_number).length || 0;
+            const pendingDeletes = songsData?.filter(s => s.delete_requested).length || 0;
+
+            const html = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(102,126,234,0.1)); padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #a8c0ff;">${totalSongs}</div>
+                        <div style="color: rgba(255,255,255,0.7);">Total Songs</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(240,147,251,0.3), rgba(240,147,251,0.1)); padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #f093fb;">${totalUsers}</div>
+                        <div style="color: rgba(255,255,255,0.7);">Registered Users</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(245,87,108,0.3), rgba(245,87,108,0.1)); padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #f5576c;">${totalComments}</div>
+                        <div style="color: rgba(255,255,255,0.7);">Comments</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(102,234,178,0.3), rgba(102,234,178,0.1)); padding: 20px; border-radius: 15px; text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #66eab2;">${scheduledCount}</div>
+                        <div style="color: rgba(255,255,255,0.7);">Scheduled</div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px;">
+                        <h4 style="margin-bottom: 15px; color: #a8c0ff;">Performance Types</h4>
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <span style="flex: 1;">Solo</span>
+                            <span style="font-weight: 600; color: #a8c0ff;">${soloCount}</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="flex: 1;">Group</span>
+                            <span style="font-weight: 600; color: #f093fb;">${groupCount}</span>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px;">
+                        <h4 style="margin-bottom: 15px; color: #a8c0ff;">Delete Requests</h4>
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <span style="flex: 1;">Pending</span>
+                            <span style="font-weight: 600; color: #f5576c;">${pendingDeletes}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('analyticsContent').innerHTML = html;
+        }
+
+        // Bulk Operations for Host
+        let selectedSongs = new Set();
+        
+        function toggleBulkMode() {
+            const buttons = document.querySelectorAll('.bulk-checkbox');
+            const isVisible = buttons.length > 0;
+            
+            if (!isVisible) {
+                // Show checkboxes
+                document.querySelectorAll('#searchResults .song-item').forEach((item, index) => {
+                    const song = allSongsForHost[index];
+                    if (song) {
+                        item.style.display = 'flex';
+                        item.innerHTML = `
+                            <input type="checkbox" class="bulk-checkbox" data-id="${song.id}" onchange="toggleSongSelection('${song.id}')" style="margin-right: 15px; width: 20px; height: 20px;">
+                            ${item.innerHTML}
+                        `;
+                    }
+                });
+                
+                // Add bulk action bar
+                const actionBar = document.createElement('div');
+                actionBar.id = 'bulkActionBar';
+                actionBar.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 15px 25px; border-radius: 15px; display: flex; gap: 15px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);';
+                actionBar.innerHTML = `
+                    <span id="selectedCount" style="color: #a8c0ff; align-self: center;">0 selected</span>
+                    <button onclick="bulkDelete()" style="background: linear-gradient(135deg, #f5576c, #f093fb); border: none; padding: 10px 20px; border-radius: 25px; color: #fff; cursor: pointer; font-weight: 600;">Delete Selected</button>
+                    <button onclick="bulkClearNumbers()" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; padding: 10px 20px; border-radius: 25px; color: #fff; cursor: pointer; font-weight: 600;">Clear Numbers</button>
+                    <button onclick="toggleBulkMode()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px; color: #fff; cursor: pointer;">Cancel</button>
+                `;
+                document.body.appendChild(actionBar);
+            } else {
+                // Hide checkboxes
+                searchAndSortSongs();
+                // Remove action bar
+                const actionBar = document.getElementById('bulkActionBar');
+                if (actionBar) actionBar.remove();
+                selectedSongs.clear();
+            }
+        }
+
+        function toggleSongSelection(songId) {
+            if (selectedSongs.has(songId)) {
+                selectedSongs.delete(songId);
+            } else {
+                selectedSongs.add(songId);
+            }
+            document.getElementById('selectedCount').textContent = selectedSongs.size + ' selected';
+        }
+
+        async function bulkDelete() {
+            if (selectedSongs.size === 0) {
+                alert('No songs selected');
+                return;
+            }
+            
+            if (!confirm('Delete ' + selectedSongs.size + ' songs?')) return;
+            
+            try {
+                for (const songId of selectedSongs) {
+                    const song = allSongsForHost.find(s => s.id === songId);
+                    if (song?.storage_path) {
+                        await window.supabase.storage.from('songs').remove([song.storage_path]);
+                    }
+                    await window.supabase.from('songs').delete().eq('id', songId);
+                }
+                
+                selectedSongs.clear();
+                await loadAllSongsForHost();
+                searchAndSortSongs();
+                alert('Songs deleted successfully!');
+                toggleBulkMode();
+            } catch (error) {
+                console.error('Bulk delete error:', error);
+                alert('Error deleting songs');
+            }
+        }
+
+        async function bulkClearNumbers() {
+            if (selectedSongs.size === 0) {
+                alert('No songs selected');
+                return;
+            }
+            
+            try {
+                for (const songId of selectedSongs) {
+                    await window.supabase.from('songs').update({ performance_number: null }).eq('id', songId);
+                }
+                
+                selectedSongs.clear();
+                await loadAllSongsForHost();
+                searchAndSortSongs();
+                alert('Performance numbers cleared!');
+                toggleBulkMode();
+            } catch (error) {
+                console.error('Bulk clear error:', error);
+                alert('Error clearing numbers');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            allSongsForHost = [];
+            document.getElementById('welcomeSection').style.display = 'flex';
+            document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('songsList').style.display = 'none';
+            document.getElementById('addSongForm').style.display = 'none';
+            document.getElementById('hostSection').style.display = 'none';
+            document.getElementById('searchHostSection').style.display = 'none';
+            document.getElementById('addHostSection').style.display = 'none';
+            document.getElementById('addHostBtn').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortSelect').value = '';
+            google.accounts.id.disableAutoSelect();
+        }
+
+        function toggleAddForm() {
+            const form = document.getElementById('addSongForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            const songsListDiv = document.getElementById('songsList');
+            if (songsListDiv) songsListDiv.style.display = 'none';
+            document.getElementById('searchHostSection').style.display = 'none';
+            document.getElementById('addHostSection').style.display = 'none';
+            document.getElementById('scheduleSection').style.display = 'none';
+            document.getElementById('analyticsSection').style.display = 'none';
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortSelect').value = '';
+            if (form.style.display === 'none') {
+                document.getElementById('participantNamesContainer').innerHTML = '';
+                document.getElementById('performanceType').value = '';
+                document.getElementById('numParticipants').value = '';
+            }
+        }
+
+        function toggleAddHost() {
+            const section = document.getElementById('addHostSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('songsList').style.display = 'none';
+            document.getElementById('addSongForm').style.display = 'none';
+            document.getElementById('searchHostSection').style.display = 'none';
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortSelect').value = '';
+            loadHostList();
+        }
+
+        function loadHostList() {
+            const container = document.getElementById('hostListContainer');
+            container.innerHTML = '';
+            
+            HOST_EMAILS.forEach((email, index) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);';
+                div.innerHTML = `
+                    <span style="color: #a8c0ff; font-size: 0.95em;">${email}</span>
+                    <button onclick="removeHost('${email}')" style="background: linear-gradient(135deg, #f5576c, #f093fb); border: none; padding: 6px 14px; border-radius: 20px; color: #fff; cursor: pointer; font-size: 0.85em; font-weight: 600;">Remove</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeHost(email) {
+            if (!confirm('Are you sure you want to remove ' + email + ' from hosts?')) return;
+            
+            const index = HOST_EMAILS.indexOf(email);
+            if (index > -1) {
+                HOST_EMAILS.splice(index, 1);
+                const customHosts = JSON.parse(localStorage.getItem('customHostEmails') || '[]');
+                const customIndex = customHosts.indexOf(email);
+                if (customIndex > -1) {
+                    customHosts.splice(customIndex, 1);
+                    localStorage.setItem('customHostEmails', JSON.stringify(customHosts));
+                }
+                loadHostList();
+                alert(email + ' has been removed from hosts');
+            }
+        }
+
+        function handlePerformanceTypeChange() {
+            const type = document.getElementById('performanceType').value;
+            const numParticipantsInput = document.getElementById('numParticipants');
+            
+            if (type === 'solo') {
+                numParticipantsInput.value = '1';
+                numParticipantsInput.disabled = true;
+                generateNameFields();
+            } else if (type === 'group') {
+                numParticipantsInput.value = '';
+                numParticipantsInput.disabled = false;
+                document.getElementById('participantNamesContainer').innerHTML = '';
+            } else {
+                numParticipantsInput.value = '';
+                numParticipantsInput.disabled = false;
+                document.getElementById('participantNamesContainer').innerHTML = '';
+            }
+        }
+
+        function generateNameFields() {
+            const num = parseInt(document.getElementById('numParticipants').value);
+            const container = document.getElementById('participantNamesContainer');
+            container.innerHTML = '';
+
+            if (num > 0) {
+                for (let i = 1; i <= num; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'form-group';
+                    div.innerHTML = `<input type="text" id="participantName${i}" placeholder="Participant ${i} Roll Number" required>`;
+                    container.appendChild(div);
+                }
+            }
+        }
+
+        function toggleSongs() {
+            const list = document.getElementById('songsList');
+            list.style.display = list.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('addSongForm').style.display = 'none';
+            document.getElementById('searchHostSection').style.display = 'none';
+            document.getElementById('addHostSection').style.display = 'none';
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortSelect').value = '';
+            loadSongs();
+            
+            // Reload delete requests for host
+            if (isHost(currentUser)) {
+                loadDeleteRequestsFromSupabase().then(() => loadDeleteRequests());
+            }
+        }
+
+        async function addSong() {
+            const performanceType = document.getElementById('performanceType').value;
+            const numParticipants = document.getElementById('numParticipants').value;
+            const songsList = document.getElementById('songsListInput').value;
+            const fileInput = document.getElementById('songFile');
+            const file = fileInput.files[0];
+
+            if (!performanceType) {
+                alert('Please select performance type');
+                return;
+            }
+
+            if (!numParticipants) {
+                alert('Please enter number of participants');
+                return;
+            }
+
+            if (!songsList) {
+                alert('Please enter songs list');
+                return;
+            }
+
+            if (!file) {
+                alert('Please select an audio file');
+                return;
+            }
+
+            const participantNames = [];
+            for (let i = 1; i <= parseInt(numParticipants); i++) {
+                const nameInput = document.getElementById(`participantName${i}`);
+                if (!nameInput || !nameInput.value.trim()) {
+                    alert(`Please enter roll number for Participant ${i}`);
+                    return;
+                }
+                participantNames.push(nameInput.value.trim());
+            }
+
+            if (file.type !== 'audio/mpeg' && !file.name.endsWith('.mp3')) {
+                alert('Please upload an MP3 file');
+                return;
+            }
+
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File too large! File size: ${(file.size / (1024 * 1024)).toFixed(2)} MB\nMaximum allowed: 5 MB\n\nPlease upload a smaller MP3 file.`);
+                return;
+            }
+
+            try {
+                alert('Uploading... Please wait.');
+                
+                const timestamp = Date.now();
+                const fileName = `${timestamp}_${file.name}`;
+                
+                const { data: uploadData, error: uploadError } = await window.supabase.storage
+                    .from('songs')
+                    .upload(fileName, file);
+
+                if (uploadError) throw uploadError;
+
+                const { data: urlData } = window.supabase.storage
+                    .from('songs')
+                    .getPublicUrl(fileName);
+
+                const { error: insertError } = await window.supabase
+                    .from('songs')
+                    .insert({
+                        performance_type: performanceType,
+                        num_participants: numParticipants,
+                        participants_name: participantNames.join(', '),
+                        songs_list: songsList,
+                        audio_url: urlData.publicUrl,
+                        storage_path: fileName,
+                        file_name: file.name,
+                        file_size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+                        uploaded_by: currentUser,
+                        delete_requested: false,
+                        timestamp: timestamp
+                    });
+
+                if (insertError) throw insertError;
+
+                document.getElementById('performanceType').value = '';
+                document.getElementById('numParticipants').value = '';
+                document.getElementById('participantNamesContainer').innerHTML = '';
+                document.getElementById('songsListInput').value = '';
+                fileInput.value = '';
+                
+                await loadSongsFromSupabase();
+                loadSongs();
+                alert('Song added successfully!');
+            } catch (error) {
+                console.error('Error uploading:', error);
+                alert('Error uploading song: ' + error.message);
+            }
+        }
+
+        function loadSongs() {
+            const songsList = document.getElementById('songsList');
+            songsList.innerHTML = '';
+
+            songs.forEach((song, index) => {
+                const uploadedByRollNumber = song.uploaded_by ? song.uploaded_by.split('@')[0] : 'Unknown';
+                const songItem = document.createElement('div');
+                songItem.className = 'song-item' + (song.delete_requested ? ' delete-request' : '');
+                songItem.innerHTML = `
+                    ${song.performance_number ? `<div class="performance-number">#${song.performance_number}</div>` : ''}
+                    <div class="song-info">
+                        <div class="song-title">${song.participants_name || song.participantsName || 'Untitled'}</div>
+                        ${song.performance_type ? `<div class="song-artist">Type: ${song.performance_type.charAt(0).toUpperCase() + song.performance_type.slice(1)}</div>` : ''}
+                        <div class="song-artist">Participants: ${song.num_participants || song.numParticipants || 'N/A'}</div>
+                        <div class="song-artist">Songs: ${song.songs_list || song.songsList || 'N/A'}</div>
+                        <div class="song-artist">Uploaded by: ${uploadedByRollNumber}</div>
+                        ${song.file_name || song.fileName ? `<div class="song-artist" style="font-size: 0.85em;">📁 ${song.file_name || song.fileName} ${song.file_size || song.fileSize ? '(' + (song.file_size || song.fileSize) + ')' : ''}</div>` : ''}
+                        ${isHost(currentUser) ? `<button class="set-number-btn" onclick="setPerformanceNumber(${index})">Set #${song.performance_number || '?'}</button>` : ''}
+                        ${song.audio_url || song.audioURL ? `<audio controls style="margin-top: 10px; width: 100%; max-width: 300px;"><source src="${song.audio_url || song.audioURL}" type="audio/mpeg"></audio>` : ''}
+                        <button class="set-number-btn" onclick="toggleComments('${song.id}')" style="margin-top: 10px;">💬 Comments</button>
+                        <div id="comments-${song.id}" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                            <div id="comments-list-${song.id}" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="comment-input-${song.id}" placeholder="Write a comment..." style="flex: 1; padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 0.9em;">
+                                <button onclick="addComment('${song.id}')" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; padding: 10px 15px; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 600;">Send</button>
+                            </div>
+                        </div>
+                        ${song.delete_requested || song.deleteRequested ? '<span class="status-badge status-pending">Delete Requested</span>' : ''}
+                    </div>
+                    <div class="song-actions">
+                        <button class="menu-btn" onclick="toggleMenu(${index})">⋮</button>
+                        <div class="dropdown-menu" id="menu-${index}">
+                            <div class="dropdown-item" onclick="editSong(${index})">Edit</div>
+                            <div class="dropdown-item" onclick="moveSong(${index}, 'up')">Move Up</div>
+                            <div class="dropdown-item" onclick="moveSong(${index}, 'down')">Move Down</div>
+                            <div class="dropdown-item" onclick="requestDelete(${index})">Delete</div>
+                        </div>
+                    </div>
+                `;
+                songsList.appendChild(songItem);
+            });
+        }
+
+        function toggleMenu(index) {
+            const menu = document.getElementById(`menu-${index}`);
+            const allMenus = document.querySelectorAll('.dropdown-menu');
+            
+            allMenus.forEach(m => {
+                if (m !== menu) m.classList.remove('show');
+            });
+            
+            menu.classList.toggle('show');
+            
+            // Prevent event from bubbling
+            event.stopPropagation();
+        }
+
+        function moveSong(index, direction) {
+            if (direction === 'up' && index > 0) {
+                [songs[index], songs[index - 1]] = [songs[index - 1], songs[index]];
+            } else if (direction === 'down' && index < songs.length - 1) {
+                [songs[index], songs[index + 1]] = [songs[index + 1], songs[index]];
+            }
+            
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            loadSongs();
+        }
+
+        async function requestDelete(index) {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            
+            const song = songs[index];
+            
+            if (isHost(currentUser)) {
+                if (!confirm('Are you sure you want to delete this song?')) {
+                    return;
+                }
+                
+                try {
+                    if (song.storage_path || song.storagePath) {
+                        await window.supabase.storage
+                            .from('songs')
+                            .remove([song.storage_path || song.storagePath]);
+                    }
+                    
+                    await window.supabase
+                        .from('songs')
+                        .delete()
+                        .eq('id', song.id);
+                    
+                    await window.supabase
+                        .from('delete_requests')
+                        .delete()
+                        .eq('song_id', song.id);
+                    
+                    await loadSongsFromSupabase();
+                    await loadDeleteRequestsFromSupabase();
+                    loadSongs();
+                    loadDeleteRequests();
+                    alert('Song deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting:', error);
+                    alert('Error deleting song: ' + error.message);
+                }
+            } else {
+                if (!confirm('Submit delete request for this song?')) {
+                    return;
+                }
+                
+                try {
+                    console.log('Updating song delete_requested flag for song id:', song.id);
+                    
+                    const { error: updateError } = await window.supabase
+                        .from('songs')
+                        .update({ delete_requested: true })
+                        .eq('id', song.id);
+                    
+                    if (updateError) {
+                        console.error('Error updating song:', updateError);
+                        throw updateError;
+                    }
+                    
+                    console.log('Inserting delete request');
+                    
+                    const { error: insertError } = await window.supabase
+                        .from('delete_requests')
+                        .insert({
+                            song_id: song.id,
+                            title: song.participants_name || song.participantsName || 'Untitled',
+                            artist: song.songs_list || song.songsList || 'N/A',
+                            requested_by: currentUser
+                        });
+                    
+                    if (insertError) {
+                        console.error('Error inserting delete request:', insertError);
+                        throw insertError;
+                    }
+                    
+                    console.log('Delete request submitted successfully');
+                    
+                    await loadSongsFromSupabase();
+                    loadSongs();
+                    alert('Delete request submitted!');
+                } catch (error) {
+                    console.error('Error requesting delete:', error);
+                    alert('Error submitting request: ' + error.message);
+                }
+            }
+        }
+
+        function loadDeleteRequests() {
+            const requestsDiv = document.getElementById('deleteRequests');
+            requestsDiv.innerHTML = '';
+
+            console.log('Loading delete requests UI, count:', deleteRequests.length);
+
+            deleteRequests.forEach((request, index) => {
+                const requestItem = document.createElement('div');
+                requestItem.className = 'request-item';
+                requestItem.innerHTML = `
+                    <div>
+                        <div class="song-title">${request.title} - ${request.artist}</div>
+                        <div class="song-artist">Requested by: ${request.requested_by || request.requestedBy}</div>
+                    </div>
+                    <button class="approve-btn" onclick="approveDelete(${index})">Approve</button>
+                `;
+                requestsDiv.appendChild(requestItem);
+            });
+
+            if (deleteRequests.length === 0) {
+                requestsDiv.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">No pending delete requests</p>';
+            }
+        }
+
+        async function refreshDeleteRequests() {
+            console.log('Manually refreshing delete requests...');
+            await loadDeleteRequestsFromSupabase();
+            loadDeleteRequests();
+            alert('Delete requests refreshed!');
+        }
+
+        async function approveDelete(requestIndex) {
+            try {
+                const request = deleteRequests[requestIndex];
+                const song = songs.find(s => s.id === request.song_id);
+                
+                if (song && (song.storage_path || song.storagePath)) {
+                    await window.supabase.storage
+                        .from('songs')
+                        .remove([song.storage_path || song.storagePath]);
+                }
+                
+                await window.supabase
+                    .from('songs')
+                    .delete()
+                    .eq('id', request.song_id);
+                
+                await window.supabase
+                    .from('delete_requests')
+                    .delete()
+                    .eq('id', request.id);
+                
+                await loadSongsFromSupabase();
+                await loadDeleteRequestsFromSupabase();
+                loadSongs();
+                loadDeleteRequests();
+                alert('Delete request approved!');
+            } catch (error) {
+                console.error('Error approving delete:', error);
+                alert('Error approving delete: ' + error.message);
+            }
+        }
+
+        async function setPerformanceNumber(index) {
+            const song = songs[index];
+            const currentNumber = song.performance_number || '';
+            const newNumber = prompt(`Set performance number for "${song.participants_name || 'Untitled'}":`, currentNumber);
+            
+            if (newNumber === null) return;
+            
+            const perfNum = newNumber.trim() === '' ? null : parseInt(newNumber);
+            
+            if (newNumber.trim() !== '' && (isNaN(perfNum) || perfNum < 1)) {
+                alert('Please enter a valid positive number');
+                return;
+            }
+            
+            try {
+                await window.supabase
+                    .from('songs')
+                    .update({ performance_number: perfNum })
+                    .eq('id', song.id);
+                
+                await loadSongsFromSupabase();
+                loadSongs();
+                alert('Performance number updated!');
+            } catch (error) {
+                console.error('Error updating:', error);
+                alert('Error updating number: ' + error.message);
+            }
+        }
+
+        async function editSong(index) {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            
+            const song = songs[index];
+            editingSongIndex = index;
+            
+            // Populate modal with current values
+            document.getElementById('editRollNumbers').value = song.participants_name || '';
+            document.getElementById('editSongsList').value = song.songs_list || '';
+            
+            // Show modal
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            editingSongIndex = null;
+        }
+
+        async function saveEdit() {
+            if (editingSongIndex === null) return;
+            
+            const song = songs[editingSongIndex];
+            const newRollNumbers = document.getElementById('editRollNumbers').value.trim();
+            const newSongsList = document.getElementById('editSongsList').value.trim();
+            
+            if (!newRollNumbers || !newSongsList) {
+                alert('Roll numbers and songs list cannot be empty');
+                return;
+            }
+            
+            try {
+                await window.supabase
+                    .from('songs')
+                    .update({
+                        participants_name: newRollNumbers,
+                        songs_list: newSongsList,
+                        num_participants: newRollNumbers.split(',').filter(r => r.trim()).length
+                    })
+                    .eq('id', song.id);
+                
+                await loadSongsFromSupabase();
+                await loadAllSongsForHost();
+                loadSongs();
+                searchAndSortSongs();
+                closeEditModal();
+                alert('Song details updated successfully!');
+            } catch (error) {
+                console.error('Error updating song:', error);
+                alert('Error updating song: ' + error.message);
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.song-actions')) {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            }
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('googleSignInLoading');
+                const signInButton = document.querySelector('.g_id_signin');
+                const onloadDiv = document.getElementById('g_id_onload');
+                
+                if (loading) loading.style.display = 'none';
+                if (signInButton) signInButton.style.display = 'flex';
+                if (onloadDiv) onloadDiv.style.display = 'flex';
+            }, 1000);
+        });
+
+        window.handleCredentialResponse = handleCredentialResponse;
+
+        // Restore session on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                console.log('Restoring session for:', currentUser);
+                
+                document.getElementById('welcomeSection').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('registerSection').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('userEmail').textContent = currentUser;
+
+                if (isHost(currentUser)) {
+                    document.getElementById('hostSection').style.display = 'block';
+                    document.getElementById('searchHostSection').style.display = 'block';
+                    document.getElementById('addHostBtn').style.display = 'inline-block';
+                    document.getElementById('exportBtn').style.display = 'inline-block';
+                    document.getElementById('analyticsBtn').style.display = 'inline-block';
+                    loadHostList();
+                    loadDeleteRequestsFromSupabase().then(() => {
+                        loadDeleteRequests();
+                    });
+                    loadAllSongsForHost().then(() => searchAndSortSongs());
+                }
+                loadSongsFromSupabase().then(() => loadSongs());
+                
+                // Load theme
+                loadTheme();
+                
+                // Start polling for new comments (only for non-host users)
+                if (!isHost(currentUser)) {
+                    startCommentPolling();
+                }
+            }
+        });
+    </script>
+<script>
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
+</body>
+</html>
